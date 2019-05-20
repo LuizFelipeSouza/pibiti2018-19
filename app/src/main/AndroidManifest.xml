@@ -13,6 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".GaleriaActivity"></activity>
         <activity android:name=".EditorActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
@@ -21,12 +22,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <provider
-            android:name="com.nevicelabs.photodiario.ProvedorDocumentos"
+            android:name=".ProvedorDocumentos"
             android:authorities="com.nevicelabs.photodiario"
             android:exported="true"
             android:grantUriPermissions="true"
-            android:permission="android.permission.MANAGE_DOCUMENTS" >
+            android:permission="android.permission.MANAGE_DOCUMENTS">
             <intent-filter>
                 <action android:name="android.content.action.DOCUMENTS_PROVIDER" />
             </intent-filter>

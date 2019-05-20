@@ -8,16 +8,20 @@ import android.net.Uri;
 import android.os.ParcelFileDescriptor;
 import android.provider.DocumentsProvider;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.FileDescriptor;
 import java.io.IOException;
+import java.util.Calendar;
+import java.util.Date;
 
 public class EditorActivity extends AppCompatActivity {
 
-    DocumentsProvider docProvider;
+    private Uri uriImagem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +29,7 @@ public class EditorActivity extends AppCompatActivity {
         setContentView(R.layout.activity_editor);
 
         Intent intent = getIntent();
-        Uri uriImagem = intent.getData();
+        this.uriImagem = intent.getData();
 
         try {
             Bitmap imagemBitmap = montarBitmap(uriImagem);
@@ -48,6 +52,20 @@ public class EditorActivity extends AppCompatActivity {
     private void exibirImagem(Bitmap imagem) {
         ImageView imageView = findViewById(R.id.imagemSelecionadaId);
         imageView.setImageBitmap(imagem);
+    }
+
+    public void enviarImagem(View view) {
+        EditText editText = (EditText) findViewById(R.id.legenda_da_imagem);
+        String legenda = editText.getText().toString();
+        Date horaAtual = Calendar.getInstance().getTime();
+
+        Postagem post = new Postagem(uriImagem, legenda, horaAtual);
+
+        Intent intent = new Intent(this, GaleriaActivity.class);
+        // A classe postagem deve implementar a interface Serializable
+        intent.putExtra("Postagem", post);
+
+        startActivity(intent);
     }
 }
 
