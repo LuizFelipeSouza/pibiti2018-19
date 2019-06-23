@@ -6,5 +6,5 @@ import java.util.Date
 
 class Postagem(uriDaImagem: Uri, legendaDaImagem: String, dataDePublicacao: Date): Serializable {
     // lateinit var titulo: String
-    var titulo: String = "Olá Mundo!"
+    var titulo: String = "Primeira postagem"
 }

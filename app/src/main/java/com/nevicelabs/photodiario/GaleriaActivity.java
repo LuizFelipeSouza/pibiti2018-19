@@ -1,42 +1,41 @@
 package com.nevicelabs.photodiario;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
 
 import java.util.ArrayList;
 
 public class GaleriaActivity extends AppCompatActivity {
-
-    private RecyclerView mRecyclerView;
-    private LinearAdapter mAdapter;
-    private RecyclerView.LayoutManager mManager;
-    private ArrayList<Postagem> postagens;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_galeria);
 
-        // O intent contemdo o URI da imagem e sua legenda e a data de publicação.
         Intent intent = getIntent();
+
+        configurarRecycler(intent);
     }
 
-    private void configurarRecycler() {
+    private void configurarRecycler(Intent intent) {
+        RecyclerView mRecyclerView = findViewById(R.id.galeria_recyclerview);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(linearLayoutManager);
 
-        postagens = new ArrayList<>();
+        Postagem post = (Postagem) intent.getSerializableExtra("Postagem");
 
-        // mAdapter = new ArrayAdapter(this, linearLayoutManager, postagens);
-        mAdapter = new LinearAdapter(new ArrayList<Postagem>(0));
+        ArrayList postagens = new ArrayList<Postagem>();
+        postagens.add(post);
+
+        LinearAdapter mAdapter = new LinearAdapter(postagens);
         mRecyclerView.setAdapter(mAdapter);
 
-
+        mRecyclerView.addItemDecoration(
+                new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
     }
 }

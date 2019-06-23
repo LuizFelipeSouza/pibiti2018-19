@@ -12,7 +12,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 public class MainActivity extends AppCompatActivity {
@@ -29,7 +28,6 @@ public class MainActivity extends AppCompatActivity {
 
     // Método de acesso às fotos do dispositivo
     public void buscarImagens(View view) {
-
         if (verificarPermissoes()) {
             // Cria um intent que usa o navegador de arquivos do sistema para escolher um arquivo
             Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
@@ -47,16 +45,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.i("", "Imagem selecionada");
-
         if (requestCode == READ_CONTEXT_CODE && resultCode == Activity.RESULT_OK) {
-            Uri uri = null;
+            Uri uri;
 
             // A URI da imagem selecionada está presente na variável data
             if (data != null) {
                 // Extraímos a URI atrabés do método getData()
                 uri = data.getData();
-                Log.i("", "Pegamos o URI da imagem e ele é: " + uri);
                 descreverImagem(uri);
             }
         }
@@ -76,12 +71,10 @@ public class MainActivity extends AppCompatActivity {
         // Executamos o método (a definir) caso tenhamos acesso aos arquivos
         if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
             // Faz algo ...
-            Log.i("", "As permissões foram garantidas");
 
             return true;
         }
         else {
-            Log.i("", "As permissões não foram garantidas");
             ActivityCompat.requestPermissions(
                     this,
                     new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
@@ -96,19 +89,18 @@ public class MainActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         // Se o rquqestCode for igual ao código de permissões, as permissões foram concedidas; prossiga
-        switch (requestCode) {
-            case CODIGO_PERMISSOES:
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // Cria um intent que usa o navegador de arquivos do sistema para escolher um arquivo
-                    Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-                    // Especificamos que os arquivos devem ser de uma categoria "abrível"
-                    intent.addCategory(Intent.CATEGORY_OPENABLE);
-                    // Especificamos que os arquivos podem ser imagens com qualquer extensão (.png, .jpg, etc.)
-                    intent.setType("image/*");
+        if (requestCode == CODIGO_PERMISSOES) {
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Cria um intent que usa o navegador de arquivos do sistema para escolher um arquivo
+                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                // Especificamos que os arquivos devem ser de uma categoria "abrível"
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                // Especificamos que os arquivos podem ser imagens com qualquer extensão (.png, .jpg, etc.)
+                intent.setType("image/*");
 
-                    startActivityForResult(intent, READ_CONTEXT_CODE);
-                }
+                startActivityForResult(intent, READ_CONTEXT_CODE);
+            }
         }
     }
 }

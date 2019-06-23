@@ -6,8 +6,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
-import android.provider.DocumentsProvider;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -35,7 +35,7 @@ public class EditorActivity extends AppCompatActivity {
             Bitmap imagemBitmap = montarBitmap(uriImagem);
             exibirImagem(imagemBitmap);
         } catch (IOException e) {
-
+            Log.i("EditorActivity", "Exceção");
         }
     }
 
@@ -55,7 +55,7 @@ public class EditorActivity extends AppCompatActivity {
     }
 
     public void enviarImagem(View view) {
-        EditText editText = (EditText) findViewById(R.id.legenda_da_imagem);
+        EditText editText = findViewById(R.id.legenda_da_imagem);
         String legenda = editText.getText().toString();
         Date horaAtual = Calendar.getInstance().getTime();
 

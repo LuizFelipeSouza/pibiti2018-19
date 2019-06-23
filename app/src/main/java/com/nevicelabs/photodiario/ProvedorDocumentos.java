@@ -43,6 +43,8 @@ public class ProvedorDocumentos extends DocumentsProvider {
 
     @Override
     public boolean onCreate() {
+        mBaseDir = getContext().getFilesDir();
+
         return false;
     }
 
@@ -66,7 +68,7 @@ public class ProvedorDocumentos extends DocumentsProvider {
         // O título da raíz (e.g. Galeria, Drive). No caso. colocamos o nome do aplicativo
         // row.add(DocumentsContract.Root.COLUMN_TITLE, getContext().getString(R.string.app_name));
         // row.add(DocumentsContract.Root.COLUMN_ICON, R.drawable.ic_launcher_foreground);
-        row.add(DocumentsContract.Root.COLUMN_DOCUMENT_ID, getIdPorArquivo(mBaseDir));
+        // row.add(DocumentsContract.Root.COLUMN_DOCUMENT_ID, getIdPorArquivo(mBaseDir));
 
         // Não entendi o que esta linha faz. Deve ser em caso de ter múltiplas raízes, aí tem que sumarizar
         // row.add(DocumentsContract.Root.COLUMN_SUMMARY, getContext().getString(R.string.root_summary));
@@ -76,7 +78,6 @@ public class ProvedorDocumentos extends DocumentsProvider {
          os arquivos desse diretório irão aparecer entre os documentos recentes e
          a busca de arquivos */
         row.add(DocumentsContract.Root.COLUMN_FLAGS, DocumentsContract.Root.FLAG_SUPPORTS_CREATE |
-                DocumentsContract.Root.FLAG_SUPPORTS_RECENTS |
                 DocumentsContract.Root.FLAG_SUPPORTS_SEARCH);
 
         // row.add(DocumentsContract.Root.COLUMN_MIME_TYPES, getMimeChildTypes(mBaseDir));
