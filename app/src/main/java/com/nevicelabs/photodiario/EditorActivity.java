@@ -1,6 +1,5 @@
 package com.nevicelabs.photodiario;
 
-
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -54,18 +53,28 @@ public class EditorActivity extends AppCompatActivity {
         imageView.setImageBitmap(imagem);
     }
 
-    public void enviarImagem(View view) {
+    public void enviarPostagem(View view) {
         EditText editText = findViewById(R.id.legenda_da_imagem);
         String legenda = editText.getText().toString();
         Date horaAtual = Calendar.getInstance().getTime();
 
         Postagem post = new Postagem(uriImagem, legenda, horaAtual);
 
-        Intent intent = new Intent(this, GaleriaActivity.class);
+        Intent intent = new Intent(this, MainActivity.class);
         // A classe postagem deve implementar a interface Serializable
         intent.putExtra("Postagem", post);
 
+        salvarPostagem(intent);
         startActivity(intent);
+    }
+
+    private void salvarPostagem(Intent intent) {
+        Log.i("Editor", "método salvaarPostagem()");
+        final int takeFlags = intent.getFlags()
+                & (Intent.FLAG_GRANT_READ_URI_PERMISSION
+                | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        // Check for the freshest data.
+        getContentResolver().takePersistableUriPermission(uriImagem,takeFlags);
     }
 }
 

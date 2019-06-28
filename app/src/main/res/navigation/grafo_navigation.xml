@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/mainActivity">
+
+    <activity
+        android:id="@+id/mainActivity"
+        android:name="com.nevicelabs.photodiario.MainActivity"
+        android:label="activity_main"
+        tools:layout="@layout/activity_main" >
+        <!--
+        <action
+            android:id="@+id/mainActivity_para_editorActivity"
+            app:destination="@+id/editorActivity"/>
+            -->
+    </activity>
+    <activity
+        android:id="@+id/editorActivity"
+        android:name="com.nevicelabs.photodiario.EditorActivity"
+        android:label="activity_editor"
+        tools:layout="@layout/activity_editor" >
+        <action
+            android:id="@+id/editorActivity_para_mainActivity"
+            app:destination="@+id/MainActivity" />
+        <argument
+            android:name="fotoSelecionada"
+            app:argType="com.nevicelabs.photodiario.Postagem"
+            />
+    </activity>
+    <fragment
+        android:id="@+id/postagemFragment"
+        android:name="com.nevicelabs.photodiario.PostagemFragment"
+        android:label="fragment_postagem"
+        tools:layout="@layout/fragment_postagem" />
+    <!--
+    <activity
+        android:id="@+id/galeriaActivity"
+        android:name="com.nevicelabs.photodiario.GaleriaActivity"
+        android:label="activity_galeria"
+        tools:layout="@layout/activity_galeria" />
+    <argument
+        android:name="postagem"
+        app:argType="com.nevicelabs.photodiario.Postagem" />
+        -->
+</navigation>
