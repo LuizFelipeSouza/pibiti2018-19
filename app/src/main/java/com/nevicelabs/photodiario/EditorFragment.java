@@ -1,29 +1,42 @@
 package com.nevicelabs.photodiario;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.os.ParcelFileDescriptor;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+
+import java.io.FileDescriptor;
+import java.io.IOException;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link PostagemFragment.OnFragmentInteractionListener} interface
+ * {@link EditorFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link PostagemFragment#newInstance} factory method to
+ * Use the {@link EditorFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class    PostagemFragment extends Fragment {
+public class EditorFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final int READ_CONTEXT_CODE = 42;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -31,7 +44,7 @@ public class    PostagemFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public PostagemFragment() {
+    public EditorFragment() {
         // Required empty public constructor
     }
 
@@ -41,11 +54,11 @@ public class    PostagemFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment PostagemFragment.
+     * @return A new instance of fragment EditorFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static PostagemFragment newInstance(String param1, String param2) {
-        PostagemFragment fragment = new PostagemFragment();
+    public static EditorFragment newInstance(String param1, String param2) {
+        EditorFragment fragment = new EditorFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -66,7 +79,7 @@ public class    PostagemFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_postagem, container, false);
+        return inflater.inflate(R.layout.fragment_editor, container, false);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -93,6 +106,28 @@ public class    PostagemFragment extends Fragment {
         mListener = null;
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        ImageView imageView = view.findViewById(R.id.imagemSelecionadaId);
+        String uriString = getArguments().getString("uri");
+        Uri uri = Uri.parse(uriString);
+        Log.i("Editor", "URI: " + uri);
+
+        try {
+            ParcelFileDescriptor parcelFileDescriptor =
+                    getContext().getContentResolver().openFileDescriptor(uri, "r");
+            FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
+            Bitmap imagem = BitmapFactory.decodeFileDescriptor(fileDescriptor);
+            parcelFileDescriptor.close();
+
+            imageView.setImageBitmap(imagem);
+        } catch(IOException e) {
+            Log.i("Editor", "IOException: " + e);
+        }
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -108,3 +143,4 @@ public class    PostagemFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 }
+

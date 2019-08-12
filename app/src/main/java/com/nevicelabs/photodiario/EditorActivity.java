@@ -7,16 +7,12 @@ import android.net.Uri;
 import android.os.ParcelFileDescriptor;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.FileDescriptor;
 import java.io.IOException;
-import java.util.Calendar;
-import java.util.Date;
 
 public class EditorActivity extends AppCompatActivity {
 
@@ -53,6 +49,7 @@ public class EditorActivity extends AppCompatActivity {
         imageView.setImageBitmap(imagem);
     }
 
+    /*
     public void enviarPostagem(View view) {
         EditText editText = findViewById(R.id.legenda_da_imagem);
         String legenda = editText.getText().toString();
@@ -67,6 +64,7 @@ public class EditorActivity extends AppCompatActivity {
         salvarPostagem(intent);
         startActivity(intent);
     }
+    */
 
     private void salvarPostagem(Intent intent) {
         Log.i("Editor", "método salvaarPostagem()");

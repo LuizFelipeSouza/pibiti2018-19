@@ -2,46 +2,35 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/nav_graph"
-    app:startDestination="@id/mainActivity">
-
-    <activity
-        android:id="@+id/mainActivity"
-        android:name="com.nevicelabs.photodiario.MainActivity"
-        android:label="activity_main"
-        tools:layout="@layout/activity_main" >
-        <!--
+    android:id="@+id/grafo_navigation"
+    app:startDestination="@id/mainFragment">
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.nevicelabs.photodiario.MainActivityFragment"
+        android:label="fragment_main"
+        tools:layout="@layout/fragment_main" >
         <action
-            android:id="@+id/mainActivity_para_editorActivity"
-            app:destination="@+id/editorActivity"/>
-            -->
-    </activity>
-    <activity
-        android:id="@+id/editorActivity"
-        android:name="com.nevicelabs.photodiario.EditorActivity"
-        android:label="activity_editor"
-        tools:layout="@layout/activity_editor" >
+            android:id="@+id/action_mainActivityFragment_to_postagemFragment"
+            android:name="uriDaImagemAction"
+            app:destination="@id/postagemFragment" />
         <action
-            android:id="@+id/editorActivity_para_mainActivity"
-            app:destination="@+id/MainActivity" />
-        <argument
-            android:name="fotoSelecionada"
-            app:argType="com.nevicelabs.photodiario.Postagem"
-            />
-    </activity>
+            android:id="@+id/action_mainActivityFragment_to_editorFragment"
+            android:name="uriDaImagemSelecionada"
+            app:destination="@id/editorFragment" />
+    </fragment>
     <fragment
         android:id="@+id/postagemFragment"
         android:name="com.nevicelabs.photodiario.PostagemFragment"
         android:label="fragment_postagem"
         tools:layout="@layout/fragment_postagem" />
-    <!--
-    <activity
-        android:id="@+id/galeriaActivity"
-        android:name="com.nevicelabs.photodiario.GaleriaActivity"
-        android:label="activity_galeria"
-        tools:layout="@layout/activity_galeria" />
-    <argument
-        android:name="postagem"
-        app:argType="com.nevicelabs.photodiario.Postagem" />
-        -->
+    <fragment
+        android:id="@+id/editorFragment"
+        android:name="com.nevicelabs.photodiario.EditorFragment"
+        android:label="fragment_editor"
+        tools:layout="@layout/fragment_editor" >
+        <action
+            android:id="@+id/action_editorFragment_to_mainActivityFragment"
+            android:name="PostagemAction"
+            app:destination="@id/mainFragment" />
+    </fragment>
 </navigation>

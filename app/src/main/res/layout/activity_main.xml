@@ -21,24 +21,21 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <include layout="@layout/content_main" />
+    <include layout="@layout/fragment_main" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
+    <fragment
+        android:id="@+id/nav_host_fragment"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:defaultNavHost="true"
+        app:navGraph="@navigation/grafo_navigation" />
+
+    <!--
+    <fragment
+        android:id="@+id/fragment_main"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        android:clickable="true"
-        android:focusable="true"
-        android:onClick="buscarImagens"
-        app:srcCompat="@android:drawable/ic_input_add" />
-    <TextView
-        android:id="@+id/empty_textview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/mensagem_padrao"
-        android:visibility="gone"
-        />
+        android:layout_height="wrap_content" />
+        -->
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
