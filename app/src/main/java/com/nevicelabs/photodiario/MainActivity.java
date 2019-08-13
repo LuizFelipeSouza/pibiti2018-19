@@ -1,40 +1,35 @@
 package com.nevicelabs.photodiario;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.icu.util.Calendar;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.EditText;
+import java.util.Date;
 
-import com.google.android.material.snackbar.Snackbar;
+import com.nevicelabs.photodiario.EditorFragmentDirections.ActionEditorFragmentToGaleriaActivityFragment;
+import com.nevicelabs.photodiario.GaleriaFragment.OnPostagemSelecionadaListener;
 
-import java.util.ArrayList;
-
-public class MainActivity extends AppCompatActivity implements EditorFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements OnPostagemSelecionadaListener {
 
     private static final int READ_CONTEXT_CODE = 42;
     private static final int CODIGO_PERMISSOES = 1111;
     private View view;
+    private String uri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +37,6 @@ public class MainActivity extends AppCompatActivity implements EditorFragment.On
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        configurarRecycler();
     }
 
     @Override
@@ -56,9 +49,9 @@ public class MainActivity extends AppCompatActivity implements EditorFragment.On
                 Log.i("MainActivity", "URI recebida com êxito: " + data);
                 Bundle bundle = new Bundle();
                 bundle.putString("uri", data.getDataString());
+                uri = data.getDataString();
                 Log.i("MainActivity",data.getDataString());
                 Navigation.findNavController(this.view).navigate(R.id.action_mainActivityFragment_to_editorFragment, bundle);
-                // onFragmentInteraction(data.getData());
             }
         }
     }
@@ -90,56 +83,20 @@ public class MainActivity extends AppCompatActivity implements EditorFragment.On
         }
     }
 
-    @Override
-    public void onFragmentInteraction(Uri uri) { }
+    private boolean verificarPermissoes() {
+        int permissionCheck = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_EXTERNAL_STORAGE);
 
-    private void configurarRecycler() {
-        /* Criei este método apenas para que a activity compilasse.
-        No método original (abaixo) passávamos um intent com as informações que iriam popular
-        a RecyclerView. Como agora estamos usando Navigation, creio que o intent não é mais
-        necessário. Daí verei mais à frente como este método vai ficar. */
-
-        RecyclerView mRecyclerView = findViewById(R.id.galeria_recyclerview);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(linearLayoutManager);
-
-        // Postagem post = (Postagem) intent.getSerializableExtra("Postagem");
-
-        ArrayList postagens = new ArrayList<Postagem>();
-        // postagens.add(post);
-
-        LinearAdapter mAdapter = new LinearAdapter(postagens);
-        mRecyclerView.setAdapter(mAdapter);
-
-        if (postagens.isEmpty()) {
-            TextView mensagemPadrao = findViewById(R.id.empty_textview);
-            mensagemPadrao.setVisibility(View.VISIBLE);
-            mRecyclerView.setVisibility(View.GONE);
+        // Executamos o método (a definir) caso tenhamos acesso aos arquivos
+        if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
+            return true;
+        } else {
+            ActivityCompat.requestPermissions(
+                    this,
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                    CODIGO_PERMISSOES);
         }
-
-        // Aqui dizemos que cada item da RecyclerView é clicável
-        mRecyclerView.addOnItemTouchListener(
-                new RecyclerView.OnItemTouchListener() {
-                    @Override
-                    public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
-                        return false;
-                    }
-
-                    @Override
-                    public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
-                        Snackbar.make(rv, "Replace with your own action", Snackbar.LENGTH_LONG)
-                                .setAction("Action", null).show();
-                    }
-
-                    @Override
-                    public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-
-                    }
-                }
-        );
-
-        mRecyclerView.addItemDecoration(
-                new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+        return false;
     }
 
     /**
@@ -165,25 +122,22 @@ public class MainActivity extends AppCompatActivity implements EditorFragment.On
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public void enviarPostagem(View view) {
-        Navigation.findNavController(view).navigate(R.id.action_editorFragment_to_mainActivityFragment);
+        EditText editText = findViewById(R.id.legenda_da_imagem);
+        String legenda = editText.getText().toString();
+        Date horaAtual = Calendar.getInstance().getTime();
+
+        Postagem post = new Postagem(uri, legenda, horaAtual);
+
+        ActionEditorFragmentToGaleriaActivityFragment action =
+                EditorFragmentDirections.actionEditorFragmentToGaleriaActivityFragment(post);
+
+        Navigation.findNavController(view).navigate(action);
     }
 
-    private boolean verificarPermissoes() {
-        int permissionCheck = ContextCompat.checkSelfPermission(this,
-                Manifest.permission.READ_EXTERNAL_STORAGE);
+    @Override
+    public void onPostagemSeleionada(Uri uri) {
 
-        // Executamos o método (a definir) caso tenhamos acesso aos arquivos
-        if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
-            // Faz algo ...
-
-            return true;
-        } else {
-            ActivityCompat.requestPermissions(
-                    this,
-                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                    CODIGO_PERMISSOES);
-        }
-        return false;
     }
 }

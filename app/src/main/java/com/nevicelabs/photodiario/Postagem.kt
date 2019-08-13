@@ -4,7 +4,7 @@ import android.net.Uri
 import java.io.Serializable
 import java.util.Date
 
-class Postagem(uriDaImagem: Uri, legendaDaImagem: String, dataDePublicacao: Date): Serializable {
+class Postagem(uriDaImagem: String, legendaDaImagem: String, dataDePublicacao: Date): Serializable {
     // lateinit var titulo: String
     var titulo: String = "Primeira postagem"
 }
