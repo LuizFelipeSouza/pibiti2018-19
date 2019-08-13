@@ -229,7 +229,6 @@ public class ProvedorDocumentos extends DocumentsProvider {
         return "application/octet-stream";
     }
 
-
     private void incluirArquivo(MatrixCursor resultado, String docId, File arquivo)
             throws FileNotFoundException {
         if (docId == null) {

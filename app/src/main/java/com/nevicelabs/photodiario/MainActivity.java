@@ -1,6 +1,7 @@
 package com.nevicelabs.photodiario;
 
 import android.Manifest;
+import android.app.SearchManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.icu.util.Calendar;
@@ -19,6 +20,8 @@ import androidx.navigation.Navigation;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
+
 import java.util.Date;
 
 import com.nevicelabs.photodiario.EditorFragmentDirections.ActionEditorFragmentToGaleriaActivityFragment;
@@ -37,6 +40,17 @@ public class MainActivity extends AppCompatActivity implements OnPostagemSelecio
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        if(getIntent() != null) {
+            Intent intent = getIntent();
+            if(Intent.ACTION_SEARCH.equals(intent.getAction())) {
+                String query = intent.getStringExtra(SearchManager.QUERY);
+                // buscar(query);
+            }
+        }
+
+        // Esta opção faz com que a busca seja ativada quando o usuário começa a digitar
+        setDefaultKeyMode(DEFAULT_KEYS_SEARCH_LOCAL);
     }
 
     @Override
@@ -46,11 +60,9 @@ public class MainActivity extends AppCompatActivity implements OnPostagemSelecio
         if (requestCode == READ_CONTEXT_CODE && resultCode == RESULT_OK) {
             // A URI da imagem selecionada está presente na variável data
             if (data != null) {
-                Log.i("MainActivity", "URI recebida com êxito: " + data);
                 Bundle bundle = new Bundle();
                 bundle.putString("uri", data.getDataString());
                 uri = data.getDataString();
-                Log.i("MainActivity",data.getDataString());
                 Navigation.findNavController(this.view).navigate(R.id.action_mainActivityFragment_to_editorFragment, bundle);
             }
         }
@@ -117,7 +129,6 @@ public class MainActivity extends AppCompatActivity implements OnPostagemSelecio
             intent.setType("image/*");
 
             startActivityForResult(intent, READ_CONTEXT_CODE);
-            // Log.i("Busca de imagens", "view: " + view);
             this.view = view;
         }
     }
@@ -137,7 +148,14 @@ public class MainActivity extends AppCompatActivity implements OnPostagemSelecio
     }
 
     @Override
-    public void onPostagemSeleionada(Uri uri) {
+    public void onPostagemSeleionada(Uri uri) {}
 
+    @Override
+    public boolean onSearchRequested() {
+        return super.onSearchRequested();
+    }
+
+    public void botaoBusca(View v) {
+        onSearchRequested();
     }
 }

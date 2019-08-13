@@ -14,6 +14,14 @@ import android.provider.BaseColumns;
  * que é muito útil na utilização de bancos de dados e provedores de conteúdo. A outra constante é
  *  _count, que conta o número de linhas presentes no banco de dados / provedor de conteúdo.
  */
-public class FotosContract implements BaseColumns {
+public class PostagensContract implements BaseColumns {
 
+    private static final String URI = "com.nevicelabs.photodiario.provider";
+    private static final String PATH = URI + "/postagens";
+    public static final String URI_PATTERN = "content://" + PATH + "*";
+
+    String[] projection = {
+            PostagensContract._ID,
+            PostagensContract._COUNT
+    };
 }

@@ -1,6 +1,7 @@
 package com.nevicelabs.photodiario;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -42,6 +43,7 @@ public class GaleriaFragment extends Fragment {
             Postagem post = EditorFragmentArgs.fromBundle(getArguments()).getPostagem();
             configurarRecycler(post);
         }
+
     }
 
     @Override

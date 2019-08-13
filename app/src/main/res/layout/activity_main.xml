@@ -11,16 +11,8 @@
         android:layout_height="wrap_content"
         android:theme="@style/AppBarOverlay">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/cardview_dark_background"
-            app:popupTheme="@style/PopupOverlay" />
-
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include layout="@layout/content_main" />
     <include layout="@layout/fragment_main" />
 
     <fragment
