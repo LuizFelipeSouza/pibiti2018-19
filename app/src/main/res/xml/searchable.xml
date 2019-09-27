@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<searchable
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- Neste arquivo, configuramos a interface de busca. O atributo label se refere
+ ao nome da aplicação e o hint ao placeholder que aparecerá na área de busca.
+  A activity que descrevemos como "buscável" foi a MainActivity. Declaramos isso
+  no AndroidManifest. -->
+<searchable xmlns:android="http://schemas.android.com/apk/res/android"
     android:label="@string/app_name"
-    android:hint="#string/barra_busca">
-
-</searchable>
+    android:hint="#string/barra_busca" />

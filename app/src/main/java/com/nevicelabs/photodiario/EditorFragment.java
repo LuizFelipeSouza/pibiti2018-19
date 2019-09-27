@@ -18,6 +18,12 @@ import android.widget.ImageView;
 import java.io.FileDescriptor;
 import java.io.IOException;
 
+/**
+ * Fragment que exibe a imagem selecionada pelo usuário
+ * e o permite escrever um texto. A partir disso, é
+ * gerado um objeto Postagem que será exibido na fragment
+ * GaleriaFragment
+ */
 public class EditorFragment extends Fragment {
 
     public EditorFragment() {}
@@ -33,6 +39,13 @@ public class EditorFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_editor, container, false);
     }
 
+    /**
+     * Este método faz parte do ciclo de vida do fragment. Chamado após a
+     * view ser criada.
+     *
+     * @param view
+     * @param savedInstanceState
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -42,12 +55,14 @@ public class EditorFragment extends Fragment {
         Uri uri = Uri.parse(uriString);
 
         try {
+            // Pega a URI da imagem selecionada pelo usuário
             ParcelFileDescriptor parcelFileDescriptor =
                     getContext().getContentResolver().openFileDescriptor(uri, "r");
             FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
             Bitmap imagem = BitmapFactory.decodeFileDescriptor(fileDescriptor);
             parcelFileDescriptor.close();
 
+            // Exibe a imagem
             imageView.setImageBitmap(imagem);
         } catch(IOException e) {
             // Faz algo

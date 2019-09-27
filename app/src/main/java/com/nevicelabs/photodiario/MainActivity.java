@@ -17,10 +17,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.navigation.Navigation;
 
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import java.util.Date;
 
@@ -41,6 +39,9 @@ public class MainActivity extends AppCompatActivity implements OnPostagemSelecio
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        /* Verificamos se há alguma intent sendo passada ao iniciar a Activity.
+         * Neste caso, estamos verificando se há alguma busca sendo feita.
+        */
         if(getIntent() != null) {
             Intent intent = getIntent();
             if(Intent.ACTION_SEARCH.equals(intent.getAction())) {
@@ -53,6 +54,14 @@ public class MainActivity extends AppCompatActivity implements OnPostagemSelecio
         setDefaultKeyMode(DEFAULT_KEYS_SEARCH_LOCAL);
     }
 
+    /**
+     * Este método é chamado após o fechamento da galeria. É utilizado para
+     * tratar a imagem selecionada pelo usuário.
+     * @param requestCode O código de identificação da chamada à galeria.
+     * @param resultCode O código retornado pela chamada à galeria.
+     * @param data Os dados retornados pela chamada à galeria. Neste caso,
+     *             irá conter o endereço URI da imagem selecionada.
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -95,6 +104,11 @@ public class MainActivity extends AppCompatActivity implements OnPostagemSelecio
         }
     }
 
+    /**
+     * Método utilizado para verificar se as permissões necessárias para o
+     * funcionamento do aplicativo foram concedidas.
+     * @return true, quando as permissões forem concedidas e false, caso contrário.
+     */
     private boolean verificarPermissoes() {
         int permissionCheck = ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE);
@@ -133,6 +147,11 @@ public class MainActivity extends AppCompatActivity implements OnPostagemSelecio
         }
     }
 
+    /**
+     * Método chamado ao clique do botão enviar em EditorFragment.
+     *
+     * @param view a view que invocou o método. No caso, um buttom
+     */
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void enviarPostagem(View view) {
         EditText editText = findViewById(R.id.legenda_da_imagem);
@@ -141,12 +160,23 @@ public class MainActivity extends AppCompatActivity implements OnPostagemSelecio
 
         Postagem post = new Postagem(uri, legenda, horaAtual);
 
+        inserirPostagem(post);
+
         ActionEditorFragmentToGaleriaActivityFragment action =
                 EditorFragmentDirections.actionEditorFragmentToGaleriaActivityFragment(post);
 
         Navigation.findNavController(view).navigate(action);
     }
 
+    /**
+     * Método sobrescrito da interface OnPostagemSelecionadaListener
+     * declarada em GaleriaFragment. É chamado quando um item da lista de
+     * postagens (a RecyclerView) é selecionado. Aqui passamos as
+     * informações da postagem selecionada para que possams abri-la em
+     * PostagemFragment.
+     *
+     * @param uri O endereço URI da postagem selecionada;
+     */
     @Override
     public void onPostagemSeleionada(Uri uri) {}
 
@@ -155,7 +185,27 @@ public class MainActivity extends AppCompatActivity implements OnPostagemSelecio
         return super.onSearchRequested();
     }
 
+    /**
+     * Este método é eecutado quando o usuário digita uma string de busca.
+     * A partir dessa string, é feita uma busca no Provedor de Documentos. De acordo
+     * com este guia: https://developer.android.com/guide/topics/providers/content-provider-basics.html?hl=pt-BR
+     * creio que uma possível implementação teria o formato abaixo.
+     *
+     * ATENÇÂO: a implementação atual deste método é apenas um exemplo, não a
+     * versão final. Estou apenas anotando o que está no guia.
+     * @param v
+     */
     public void botaoBusca(View v) {
         onSearchRequested();
+    }
+
+    /**
+     * Método chamado quando o botão enviarPostagem é clicado
+     * em EditorFragment. Persiste a postagem no provedor de documentos.
+     *
+     * @param post A postagem a ser persistida
+     */
+    private void inserirPostagem(Postagem post) {
+
     }
 }
