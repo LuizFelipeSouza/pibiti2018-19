@@ -19,16 +19,17 @@ import java.util.DoubleSummaryStatistics;
  * definidos na classe PostagemContract.
  */
 public class ProvedorPostagens extends ContentProvider {
-    // Exemplo de implementação deste método. Esta variável representa o banco de dados que ainda vamos implementar.
-    // private AppDatabase appDatabase;
+    // Esta variável representa o banco de dados que ainda vamos implementar.
+    private PostagensDatabase postagensDatabase;
 
     private PostagemDAO postagemDAO;
-    private static final String DBNAME = "postagensdb";
+    private static final String DBNAME = "postagens_db";
+    private String queryBusca;
 
     @Override
     public boolean onCreate() {
-        PostagensDatabase appDatabase = Room.databaseBuilder(getContext(), PostagensDatabase.class, DBNAME).build();
-        postagemDAO = appDatabase.getPostagemDao();
+        PostagensDatabase postagensDatabase = Room.databaseBuilder(getContext(), PostagensDatabase.class, DBNAME).build();
+        postagemDAO = postagensDatabase.postagem();
 
         return true;
     }
@@ -49,7 +50,6 @@ public class ProvedorPostagens extends ContentProvider {
             somente se ocorrer um erro interno durante o processo de consulta.
          */
 
-        /*
         // A "projection" defines the columns that will be returned for each row
         String[] mProjection = {
                 PostagensContract.URI_IMAGEM,
@@ -59,7 +59,8 @@ public class ProvedorPostagens extends ContentProvider {
         };
 
         // Gets a word from the UI
-        String searchString = searchWord.getText().toString();
+        // String searchString = queryBusca.getText().toString();
+        String searchString = queryBusca;
 
         // Remember to insert code here to check for invalid or malicious input.
 
@@ -79,10 +80,10 @@ public class ProvedorPostagens extends ContentProvider {
         }
 
         // Does a query against the table and returns a Cursor object
-        Cursor mCursor = getContentResolver().query(
-                PostagensContract.URI_POSTAGEM,  // The content URI of the words table
+        Cursor mCursor = postagemDAO.query(
+                PostagensContract.URI_POSTAGEM,   // The content URI of the words table
                 projection,                       // The columns to return for each row
-                selection,                  // Either null, or the word the user entered
+                selection,                        // Either null, or the word the user entered
                 selectionArgs,                    // Either empty, or the string the user entered
                 sortOrder);                       // The sort order for the returned rows
 
@@ -122,7 +123,6 @@ public class ProvedorPostagens extends ContentProvider {
 
         // Sets the adapter for the ListView
         wordList.setAdapter(cursorAdapter);
-        */
 
         return null;
     }
@@ -162,6 +162,10 @@ public class ProvedorPostagens extends ContentProvider {
         */
 
         return null;
+    }
+
+    public void fazerBusca(String query) {
+        this.queryBusca = query;
     }
 
     @Nullable

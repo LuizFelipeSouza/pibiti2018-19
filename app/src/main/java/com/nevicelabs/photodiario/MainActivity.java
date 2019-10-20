@@ -38,20 +38,37 @@ public class MainActivity extends AppCompatActivity implements OnPostagemSelecio
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        /* Verificamos se há alguma intent sendo passada ao iniciar a Activity.
-         * Neste caso, estamos verificando se há alguma busca sendo feita.
-        */
-        if(getIntent() != null) {
-            Intent intent = getIntent();
-            if(Intent.ACTION_SEARCH.equals(intent.getAction())) {
-                String query = intent.getStringExtra(SearchManager.QUERY);
-                // buscar(query);
-            }
-        }
+        handleIntent(getIntent());
 
         // Esta opção faz com que a busca seja ativada quando o usuário começa a digitar
         setDefaultKeyMode(DEFAULT_KEYS_SEARCH_LOCAL);
+    }
+
+    /**
+     * Devido à inicialização da Activity, configurada como singleTop, precisamos
+     * verificar se há algum intent sendo recebido, tanto no método onCreate(), quanto
+     * neste método onNewIntent()
+     *
+     * @param intent O intente recebido do diálogo de busca, que contém a consulta;
+     */
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        handleIntent(intent);
+    }
+
+    private void handleIntent(Intent intent) {
+        /* Verificamos se há alguma intent sendo passada ao iniciar a Activity.
+         * Neste caso, estamos verificando se há alguma busca sendo feita.
+         */
+        if(getIntent() != null) {
+            intent = getIntent();
+            if(Intent.ACTION_SEARCH.equals(intent.getAction())) {
+                String query = intent.getStringExtra(SearchManager.QUERY);
+                buscar(query);
+            }
+        }
     }
 
     /**
@@ -180,6 +197,13 @@ public class MainActivity extends AppCompatActivity implements OnPostagemSelecio
     @Override
     public void onPostagemSeleionada(Uri uri) {}
 
+    /**
+     * Este método é chamado quando o botão de busca é tocado. Sua
+     * função é inicializar as funcionalidades de busca.
+     *
+     * @return true, caso a interface de busca tenha sido inicializada
+     * com sucessm false caso contrário.
+     */
     @Override
     public boolean onSearchRequested() {
         return super.onSearchRequested();
@@ -207,5 +231,19 @@ public class MainActivity extends AppCompatActivity implements OnPostagemSelecio
      */
     private void inserirPostagem(Postagem post) {
 
+    }
+
+    /**
+     * Este método lida com a string de busca ddigitada pelo usuário no diálogo de busca.
+     * Pegamos a string e enviamos para o provedor de documentos, que irá fazer a
+     * busca nos registros e retornará os resultados compatíveis.
+     *
+     * @param query A string de busca digitada pelo usuário no diálogo de busca.
+     */
+    private void buscar(String query) {
+        // Intent textoBusca = new Intent();
+        // textoBusca.putExtra("busca", query);
+        ProvedorPostagens provider = new ProvedorPostagens();
+        provider.fazerBusca(query);
     }
 }

@@ -1,25 +1,28 @@
 package com.nevicelabs.photodiario;
 
-import android.content.ContentValues;
+import android.database.Cursor;
 
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
 
-import java.util.List;
-
 @Dao
-    public class PostagemDAO {
+    public interface PostagemDAO {
 
-    private ContentValues mNovosValores;
+    /**
+     * Retorna todas as postagens no banco de dados.
+     *
+     * @return Um cursor que permite a navegação entre as postagens.
+     */
+    @Query("SELECT * FROM " + Postagem.TABLE_NAME)
+    public Cursor selectAll();
 
-    @Query("SELECT * FROM postagem")
-    List<Postagem> loadAllByIds(int[] postagemIds) {
-        return null;
-    }
-
+    /**
+     * Insere uma única postagem no banco de dados.
+     *
+     * @param postagem A postagem a ser inserida
+     * @return O id da postagem que acabou de ser inserida.
+     */
     @Insert
-    public void inserirPostagem(){
-        mNovosValores = new ContentValues();
-    }
+    long inserirPostagem(Postagem postagem);
 }
