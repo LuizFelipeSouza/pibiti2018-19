@@ -7,10 +7,12 @@ import androidx.room.PrimaryKey;
 import java.io.Serializable;
 import java.util.Date;
 
-@Entity(tableName = Postagem.TABLE_NAME)
+@Entity(tableName = "postagens")
 public class Postagem implements Serializable {
 
-        public Postagem(String uri, String legenda, Date dataDePublicacao) {
+        public Postagem() {}
+
+        public Postagem(String uri, String legenda, String dataDePublicacao) {
                 this.uriImagem = uri;
                 this.legenda = legenda;
                 this.dataDePublicacao = dataDePublicacao;
@@ -26,11 +28,51 @@ public class Postagem implements Serializable {
         private String uriImagem;
 
         @ColumnInfo(name="titulo")
-        private String titulo = "Primeira Postagem";
+        public String titulo = "Primeira Postagem";
 
         @ColumnInfo(name="legenda")
         private String legenda;
 
         @ColumnInfo(name="data_publicacao")
-        private Date dataDePublicacao;
+        private String dataDePublicacao;
+
+        public long getId() {
+                return id;
+        }
+
+        public String getDataDePublicacao() {
+                return dataDePublicacao;
+        }
+
+        public String getLegenda() {
+                return legenda;
+        }
+
+        public String getTitulo() {
+                return titulo;
+        }
+
+        public void setId(long id) {
+                this.id = id;
+        }
+
+        public void setUriImagem(String uriImagem) {
+                this.uriImagem = uriImagem;
+        }
+
+        public void setTitulo(String titulo) {
+                this.titulo = titulo;
+        }
+
+        public void setLegenda(String legenda) {
+                this.legenda = legenda;
+        }
+
+        public void setDataDePublicacao(String dataDePublicacao) {
+                this.dataDePublicacao = dataDePublicacao;
+        }
+
+        public String getUriImagem() {
+                return uriImagem;
+        }
 }

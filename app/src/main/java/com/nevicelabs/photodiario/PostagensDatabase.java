@@ -16,14 +16,14 @@ public abstract class PostagensDatabase extends RoomDatabase {
     /**
      * @return O DAO para a tabela postagens
      */
-    public abstract PostagemDAO postagem();
+    public abstract PostagemDAO postagemDAO();
 
     private static PostagensDatabase postagemDb;
 
     public static synchronized PostagensDatabase getInstance(Context context) {
         if (postagemDb == null) {
             postagemDb = Room
-                    .databaseBuilder(context.getApplicationContext(), PostagensDatabase.class, "ex")
+                    .databaseBuilder(context.getApplicationContext(), PostagensDatabase.class, "postagens")
                     .build();
         }
         return postagemDb;

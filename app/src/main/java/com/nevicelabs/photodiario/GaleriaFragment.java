@@ -1,15 +1,11 @@
 package com.nevicelabs.photodiario;
 
-import android.content.ContentUris;
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.ListFragment;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,21 +14,12 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link GaleriaFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link GaleriaFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class GaleriaFragment extends Fragment {
     /* TODO: Talvez seja mais interessante fazer com que este fragment extenda ListFragment
      * A justificativa é que isso serviria para lidar com os eventos de seleção de itens da

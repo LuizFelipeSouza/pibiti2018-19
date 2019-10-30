@@ -1,22 +1,30 @@
 package com.nevicelabs.photodiario;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.icu.util.Calendar;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
+import androidx.room.Room;
 
 import android.os.ParcelFileDescriptor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 
 import java.io.FileDescriptor;
 import java.io.IOException;
+import java.util.Date;
 
 /**
  * Fragment que exibe a imagem selecionada pelo usuário
@@ -25,6 +33,9 @@ import java.io.IOException;
  * GaleriaFragment
  */
 public class EditorFragment extends Fragment {
+
+    private Context context;
+    private String uri;
 
     public EditorFragment() {}
 
@@ -37,6 +48,11 @@ public class EditorFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_editor, container, false);
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
     }
 
     /**
@@ -68,5 +84,8 @@ public class EditorFragment extends Fragment {
             // Faz algo
         }
     }
+
+
+
 }
 

@@ -13,6 +13,7 @@
             android:id="@+id/action_mainActivityFragment_to_editorFragment"
             android:name="uriDaImagemSelecionada"
             app:destination="@id/editorFragment" />
+        <!-- Suspeito de que precisaremos passar alguma coisa como argumento para editorFragment -->
     </fragment>
 
     <fragment
@@ -53,4 +54,8 @@
         android:name="com.nevicelabs.photodiario.PostagemFragment"
         android:label="fragment_postagem"
         tools:layout="@layout/fragment_postagem" />
+
+    <!-- Talvez tenhamos que colocar a activity aqui também -->
+
+
 </navigation>

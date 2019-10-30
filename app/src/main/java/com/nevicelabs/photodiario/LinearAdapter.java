@@ -43,7 +43,7 @@ public class LinearAdapter extends RecyclerView.Adapter<LinearAdapter.GaleriaVie
 
     @Override
     public void onBindViewHolder(@NonNull GaleriaViewHolder holder, int position) {
-        holder.titulo.setText(mPostagens.get(position).getTitulo());
+        holder.titulo.setText(mPostagens.get(position).titulo);
     }
 
     @Override

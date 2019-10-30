@@ -9,9 +9,9 @@ public class NavigationFragment implements NavHost {
         super();
     }
 
-        @NonNull
-        @Override
-        public NavController getNavController() {
-            return null;
-        }
+    @NonNull
+    @Override
+    public NavController getNavController() {
+        return null;
     }
+}

@@ -15,15 +15,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.room.Room;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
-import java.util.Date;
-
-import com.nevicelabs.photodiario.EditorFragmentDirections.ActionEditorFragmentToGaleriaActivityFragment;
+import com.google.android.material.navigation.NavigationView;
 import com.nevicelabs.photodiario.GaleriaFragment.OnPostagemSelecionadaListener;
+
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity implements OnPostagemSelecionadaListener {
 
@@ -32,16 +35,25 @@ public class MainActivity extends AppCompatActivity implements OnPostagemSelecio
     private View view;
     private String uri;
 
+    public NavigationView navigationView;
+    public NavController navController;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
+        setupNavigation();
         setSupportActionBar(toolbar);
         handleIntent(getIntent());
 
         // Esta opção faz com que a busca seja ativada quando o usuário começa a digitar
         setDefaultKeyMode(DEFAULT_KEYS_SEARCH_LOCAL);
+    }
+
+    private void setupNavigation() {
+        navigationView = findViewById(R.id.grafo_navigation);
+        navController = Navigation.findNavController(this, R.id.nav_host_fragment);
     }
 
     /**
@@ -58,6 +70,12 @@ public class MainActivity extends AppCompatActivity implements OnPostagemSelecio
         handleIntent(intent);
     }
 
+    /**
+     * Verificamos se há alguma intent sendo passada ao iniciar a Activity.
+     * Neste caso, estamos verificando se há alguma busca sendo feita.
+     *
+     * @param intent intent com a query de busca que o usuário pode ter feito no diálogo de busca.
+     */
     private void handleIntent(Intent intent) {
         /* Verificamos se há alguma intent sendo passada ao iniciar a Activity.
          * Neste caso, estamos verificando se há alguma busca sendo feita.
@@ -164,25 +182,33 @@ public class MainActivity extends AppCompatActivity implements OnPostagemSelecio
         }
     }
 
-    /**
-     * Método chamado ao clique do botão enviar em EditorFragment.
-     *
-     * @param view a view que invocou o método. No caso, um buttom
-     */
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void enviarPostagem(View view) {
         EditText editText = findViewById(R.id.legenda_da_imagem);
         String legenda = editText.getText().toString();
-        Date horaAtual = Calendar.getInstance().getTime();
+        String horaAtual = Calendar.getInstance().getTime().toString();
+        Log.i("Main", horaAtual);
 
         Postagem post = new Postagem(uri, legenda, horaAtual);
 
         inserirPostagem(post);
 
-        ActionEditorFragmentToGaleriaActivityFragment action =
+        EditorFragmentDirections.ActionEditorFragmentToGaleriaActivityFragment action =
                 EditorFragmentDirections.actionEditorFragmentToGaleriaActivityFragment(post);
 
         Navigation.findNavController(view).navigate(action);
+    }
+
+    /**
+     * Método chamado quando o botão enviarPostagem é clicado
+     * em EditorFragment. Persiste a postagem no provedor de documentos.
+     *
+     * @param post A postagem a ser persistida
+     */
+    private void inserirPostagem(Postagem post) {
+        PostagensDatabase db = Room.databaseBuilder(getApplicationContext(),
+                PostagensDatabase.class, "postagens").allowMainThreadQueries().build();
+        db.postagemDAO().inserirPostagem(post);
     }
 
     /**
@@ -211,7 +237,7 @@ public class MainActivity extends AppCompatActivity implements OnPostagemSelecio
 
     /**
      * Este método é eecutado quando o usuário digita uma string de busca.
-     * A partir dessa string, é feita uma busca no Provedor de Documentos. De acordo
+     * A partir dessa string, é feita uma busca no banco de dados. De acordo
      * com este guia: https://developer.android.com/guide/topics/providers/content-provider-basics.html?hl=pt-BR
      * creio que uma possível implementação teria o formato abaixo.
      *
@@ -224,18 +250,8 @@ public class MainActivity extends AppCompatActivity implements OnPostagemSelecio
     }
 
     /**
-     * Método chamado quando o botão enviarPostagem é clicado
-     * em EditorFragment. Persiste a postagem no provedor de documentos.
-     *
-     * @param post A postagem a ser persistida
-     */
-    private void inserirPostagem(Postagem post) {
-
-    }
-
-    /**
-     * Este método lida com a string de busca ddigitada pelo usuário no diálogo de busca.
-     * Pegamos a string e enviamos para o provedor de documentos, que irá fazer a
+     * Este método lida com a string de busca digitada pelo usuário no diálogo de busca.
+     * Pegamos a string e enviamos para o DAO, que irá fazer a
      * busca nos registros e retornará os resultados compatíveis.
      *
      * @param query A string de busca digitada pelo usuário no diálogo de busca.
@@ -243,7 +259,9 @@ public class MainActivity extends AppCompatActivity implements OnPostagemSelecio
     private void buscar(String query) {
         // Intent textoBusca = new Intent();
         // textoBusca.putExtra("busca", query);
-        ProvedorPostagens provider = new ProvedorPostagens();
-        provider.fazerBusca(query);
+        PostagensDatabase db = Room.databaseBuilder(getApplicationContext(),
+                PostagensDatabase.class, "postagens").allowMainThreadQueries().build();
+
+        db.postagemDAO().selectPostagens(query);
     }
 }
