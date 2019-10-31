@@ -169,6 +169,7 @@ public class MainActivity extends AppCompatActivity implements OnPostagemSelecio
      *             FloatingButton.
      */
     public void buscarImagens(View view) {
+        Log.i("Main", "Buscar imagnes");
         if (verificarPermissoes()) {
             // Cria um intent que usa o navegador de arquivos do sistema para escolher um arquivo
             Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
